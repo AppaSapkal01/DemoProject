@@ -1,45 +1,15 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Icons from './Icons';
+import {StyleSheet, Text, View} from 'react-native';
 
-const NameSection = () => {
+const NameSection: React.FC = () => {
   return (
     <>
-    <View style={styles.calenderButtonSection}>
-        <TouchableOpacity>
-          <Icons
-            name="calendar"
-            size={31}
-            color="black"
-            style={styles.calenderButton}
-          />
-          <Text
-            style={[
-              styles.calenderText,
-              {
-                width: 49,
-                height: 18,
-                top: -25,
-                left: 39,
-                lineHeight: 17.94,
-              },
-            ]}>
-            Calendar
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={[{width: 105, height: 36, top: 48, left: 16}]}>
+      <View style={[{width: 100, height: 21, top: 39, left: 17}]}>
         <Text style={styles.userName}>Hi Sunny,</Text>
       </View>
-      <View style={{width: 483, height: 30, top: 51, left: 1}}>
+      <View style={{width: 383, height: 21, top: 55, left: 25}}>
         <Text style={styles.message} numberOfLines={2}>
-          Welcome to your dashboard.
+          Welcome to your dashboard. Hope you're doing great.
         </Text>
       </View>
     </>
@@ -71,16 +41,16 @@ const styles = StyleSheet.create({
   userName: {
     fontFamily: 'Kanit',
     fontWeight: '300',
-    fontSize: 24,
-    lineHeight: 35,
+    fontSize: 14,
+    lineHeight: 20.93,
     marginLeft: '5%',
-    color: 'black',
+    color: '#000000',
   },
   message: {
     fontFamily: 'Kanit',
     fontWeight: '400',
-    fontSize: 20,
-    lineHeight: 30,
+    fontSize: 14,
+    lineHeight: 20.93,
     color: '#F46413',
   },
 });

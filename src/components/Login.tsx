@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'reac
 import CheckBox from 'react-native-check-box';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
-const App = () => {
+const Login = () => {
   const onPressLogin = () => {
     // Do something about login operation
   };
@@ -195,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Login;

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
-//import Menufile from './Menufile';
 
 const AbstCandidates = () => {
   const dummyData = [
@@ -35,25 +34,11 @@ const AbstCandidates = () => {
     // Logic for filtering the tableData based on the searchInput
   };
 
-  const handleButtonPress = () => {
-    setMenuVisible(true);
-  };
 
-  const handleMenuOption = (option: string) => {
-    console.log('Selected Option:', option);
-    setSelectedMenu(option);
-    setMenuVisible(false);
-  };
 
   return (
     <View style={styles.container}>
       <View style={styles.child1}>
-        {/* <Menufile
-          onPress={handleButtonPress}
-          menuVisible={menuVisible}
-          selectedMenu={selectedMenu}
-          handleMenuOption={handleMenuOption}
-        /> */}
       </View>
       <View style={styles.child2}>
         <TextInput
