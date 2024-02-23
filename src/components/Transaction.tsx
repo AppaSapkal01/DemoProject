@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
+import BottomTabNavigator from '../navigation/BottomTabNavigator';
 
 const Transaction = () => {
   const [tableHead, setTableHead] = useState(['Sr. No', 'Month', 'Amount']);
@@ -27,8 +28,8 @@ const Transaction = () => {
         <Text style={{ color: 'black' }}>Transaction</Text>
         <View>
           <Table borderStyle={{ borderWidth: 2, borderColor: '#c8e1ff' }}>
-            <Row data={tableHead} style={styles.head} textStyle={styles.text} />
-            <Rows data={tableData} textStyle={styles.text} />
+            <Row data={tableHead} style={{height: 40, backgroundColor: '#f1f8ff'}} textStyle={{margin: 6, color: 'black'}} />
+            <Rows data={tableData} textStyle={{margin: 6, color: 'black'}} />
           </Table>
         </View>
       </View>

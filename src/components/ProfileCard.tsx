@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import Icons from './Icons';
-import NameSection from './NameSection';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   Profile: undefined;
   ProfileDetails: undefined;
+  Calender: undefined;
+  Transaction: undefined
   // Add other screens as needed
 };
 
@@ -17,7 +18,6 @@ type ProfileCardProps = {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ navigation }) => {
   const [isChevronDown, setIsChevronDown] = useState(false);
-  // const navigation = useNavigation();
 
    const handleToggleIcon = () => {
     setIsChevronDown(prev => !prev);
@@ -25,7 +25,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ navigation }) => {
   };
   return (
     <>
-      <NameSection />
+      {/* <NameSection onNavigate={(screen: any) => navigation.navigate(screen)} /> */}
       <View style={styles.innerView}>
         <View style={styles.childView2}>
           <TouchableOpacity style={{width: 28, height: 28}}>
@@ -82,8 +82,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ navigation }) => {
         </View>
       </View>
       <TouchableOpacity 
-      style={styles.transactionBtn}
-      >
+        style={styles.transactionBtn}
+        onPress={() => navigation.navigate('Transaction')}>
         <Text style={styles.transactionBtnText}>Transaction</Text>
       </TouchableOpacity>
     </>
