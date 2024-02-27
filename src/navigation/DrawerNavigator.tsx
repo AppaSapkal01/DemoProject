@@ -4,6 +4,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import BottomTabNavigator from './BottomTabNavigator';
 import Transaction from '../Components/Transaction';
 import NameSection from '../Components/NameSection';
+import History from '../Components/History';
+import Login from '../Components/Login';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,9 +32,10 @@ const DrawerNavigator: React.FC = () => (
         width: 240,
       },
     }}>
-    <Drawer.Screen name="ProfileHome" component={BottomTabNavigator} options={{ drawerLabel: 'Home'}}/>
+    <Drawer.Screen name="ProfileHome" component={BottomTabNavigator} options={{ drawerLabel: 'Home', headerTitle: 'Home'}}/>
     <Drawer.Screen name="Transaction" component={Transaction} />
-    <Drawer.Screen name="Name" component={NameSection} />
+    <Drawer.Screen name="History" component={History} />
+    <Drawer.Screen name="Login" component={Login} />
     {/* Add other screens like 'History', 'Help', 'Apply for Leave' here */}
   </Drawer.Navigator>
 );

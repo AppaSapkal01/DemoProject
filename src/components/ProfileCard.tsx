@@ -1,216 +1,320 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Button,
+} from 'react-native';
 import Icons from './Icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   Profile: undefined;
   ProfileDetails: undefined;
-  Calender: undefined;
-  Transaction: undefined
+  EditProfile: undefined;
   // Add other screens as needed
 };
 
-type ProfileCardProps = {
+type ProfileProps = {
   navigation: NativeStackNavigationProp<RootStackParamList>;
 };
 
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ navigation }) => {
-  const [isChevronDown, setIsChevronDown] = useState(false);
+const ProfileCard: React.FC<ProfileProps> = ({navigation}) => {
+  const [mobileNumber, setMobileNumber] = useState('1515151515');
+  const [email, setEmail] = useState('xyz@gmail.com');
+  const [isMobileModalVisible, setMobileModalVisible] = useState(false);
+  const [isEmailModalVisible, setEmailModalVisible] = useState(false);
+  const [newMobileNumber, setNewMobileNumber] = useState(mobileNumber);
+  const [newEmail, setNewEmail] = useState(email);
+  // const [newData, setNewData] = useState({mobileNumber: '', email: ''});
 
-   const handleToggleIcon = () => {
-    setIsChevronDown(prev => !prev);
-    navigation.navigate('ProfileDetails')
+  const handleMobileChange = () => {
+    // Validate if the newMobileNumber is a 10-digit number
+    if (/^\d{10}$/.test(newMobileNumber)) {
+      // Update the mobile number on save
+      setMobileNumber(newMobileNumber);
+      console.log('New Mobile Number:', newMobileNumber);
+      setNewMobileNumber('');
+    }
+    setMobileModalVisible(false);
   };
+
+  const handleCancelChange = () => {
+    // Reset the newMobileNumber state on cancel
+    setNewMobileNumber(mobileNumber);
+    setMobileModalVisible(false);
+    setNewMobileNumber('');
+  };
+
+  const handleEmailChange = () => {
+    // You can add email validation logic here if needed
+    setEmail(newEmail);
+    console.log('New Email:', newEmail);
+    setEmailModalVisible(false);
+    setNewEmail(''); // Clear the input field after saving changes
+  };
+
+  const handleCancelEmailChange = () => {
+    setNewEmail(email); // Clear the input field on cancel
+    setEmailModalVisible(false);
+    setNewEmail('');
+  };
+
   return (
     <>
-      {/* <NameSection onNavigate={(screen: any) => navigation.navigate(screen)} /> */}
-      <View style={styles.innerView}>
-        <View style={styles.childView2}>
-          <TouchableOpacity style={{width: 28, height: 28}}>
-            <Icons name="edit" color="white" style={{top: 3, left: 268}} />
+      <View style={{flex: 1}}>
+        <View style={styles.topSection}>
+          <TouchableOpacity style={styles.editButton} onPress={() => navigation.navigate('EditProfile')}>
+            <Icons name="edit" color="#F46413" size={19} />
           </TouchableOpacity>
-
-          <Text style={styles.text}>Profile</Text>
+          <Text style={styles.editText}>Edit Profile</Text>
+        </View>
+        <View style={styles.imageSection}>
           <Image
             source={require('../assets/dummy-image.jpg')}
-            style={styles.image}
+            style={styles.profileImage}
           />
-          <Text style={styles.txtName}>Sunny Salve</Text>
-          <View style={{top: -30}}>
-            <Icons
-              name="phone"
-              color="black"
-              size={16}
-              style={{top: 195, left: 76.06}}
-            />
-            <Text style={styles.txtNo}>8308374426 </Text>
-            <Icons
-              name="envelope"
-              color="black"
-              size={16}
-              style={{top: 225, left: 76.06}}
-            />
-            <Text style={styles.txtMail}>xyz@gmail.com</Text>
+          <Text style={styles.profileName}>Sunny Salve</Text>
+        </View>
+        <View style={styles.userDeatailSection}>
+          <View style={styles.detailsField}>
+            <Icons name="phone" color="black" size={16} style={{top: 4.5}} />
+            <Text style={styles.detailsText}>Mobile No -</Text>
+            <Text style={styles.detailsText}>{mobileNumber}</Text>
+            <TouchableOpacity onPress={() => setMobileModalVisible(true)}>
+              <Text style={styles.changeButton}>Change</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.detailsField}>
+            <Icons name="envelope" color="black" size={16} style={{top: 4.5}} />
+            <Text style={[styles.detailsText]}>Email -</Text>
+            <Text style={styles.detailsText}>{email}</Text>
+            <TouchableOpacity>
+              <Text
+                style={styles.changeButton}
+                onPress={() => setEmailModalVisible(true)}>
+                Change
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.detailsField}>
             <Icons
               name="map-marker"
               color="black"
               size={16}
-              style={{top: 250, left: 79}}
+              style={{top: 4.5}}
             />
-            <Text style={styles.txtAdd}>Xyz, No12, Abcde.</Text>
-          </View>
-
-          <View style={styles.childView3}>
-            <TouchableOpacity
-              onPress={handleToggleIcon}
-              style={{position: 'relative', width: 30, height: 30}}>
-              <Icons
-                name={isChevronDown ? 'chevron-down' : 'chevron-up'}
-                color="white"
-                size={30}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 135,
-                  transform: [{rotate: isChevronDown ? '-360deg' : '0deg'}],
-                }}
-              />
-            </TouchableOpacity>
+            <Text style={styles.detailsText}>Location</Text>
+            <Text style={styles.detailsText}>xyz, Abcd</Text>
           </View>
         </View>
       </View>
-      <TouchableOpacity 
-        style={styles.transactionBtn}
-        onPress={() => navigation.navigate('Transaction')}>
-        <Text style={styles.transactionBtnText}>Transaction</Text>
-      </TouchableOpacity>
+      {/* Mobile Number Change Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isMobileModalVisible}
+        onRequestClose={() => handleCancelChange()}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Mobile Number</Text>
+            <Text style={{fontFamily: 'Kanit', fontSize: 11, paddingBottom: 10}}>Please enter your mobile number</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Enter new mobile number"
+              keyboardType="numeric"
+              maxLength={10} // Set max length to 10 digits
+              value={newMobileNumber}
+              onChangeText={text => setNewMobileNumber(text)}
+            />
+            <View style={{width: 250, flexDirection: 'row', justifyContent: 'space-evenly'}}>
+              <TouchableOpacity
+                style={{
+                  width: 70,
+                  height: 32,
+                  backgroundColor: '#F46413',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {/* <Button title="Save"  /> */}
+                <Text style={{color: '#FFFFFF'}} onPress={handleMobileChange}>
+                  Save
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 70,
+                  height: 32,
+                  backgroundColor: '#F46413',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {/* <Button title="Save"  /> */}
+                <Text style={{color: '#FFFFFF'}} onPress={handleCancelChange}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {/* Email Change Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isEmailModalVisible}
+        onRequestClose={() => handleCancelEmailChange()}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Email</Text>
+            <Text style={{fontFamily: 'Kanit', fontSize: 11, paddingBottom: 10}}>Please enter your email</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Enter new email"
+              keyboardType="email-address"
+              value={newEmail}
+              onChangeText={text => setNewEmail(text)}
+            />
+            <View style={{ width: 250, flexDirection: 'row', justifyContent: 'space-evenly'}}>
+              <TouchableOpacity
+                style={{
+                  width: 70,
+                  height: 32,
+                  backgroundColor: '#F46413',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {/* <Button title="Save"  /> */}
+                <Text style={{color: '#FFFFFF'}} onPress={handleEmailChange}>
+                  Save
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: 70,
+                  height: 32,
+                  backgroundColor: '#F46413',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                {/* <Button title="Save"  /> */}
+                <Text style={{color: '#FFFFFF'}} onPress={handleCancelEmailChange}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  innerView: {
-    position: 'absolute',
-    width: 300,
-    height: 377,
-    top: 180,
-    left: 45,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    overflow: 'hidden', // Ensure overflow is hidden to hide part of the image
+  topSection: {
+    flex: 0.3,
+    backgroundColor: '#F46413',
   },
-  image: {
-    width: 101,
-    height: 101,
+  editButton: {
+    width: 35,
+    height: 35,
+    backgroundColor: 'white',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'absolute',
-    top: 53,
-    left: 99,
-    borderRadius: 50.5, // Half of the width or height for a perfect circle
+    top: 55,
+    left: 330,
+    zIndex: 2,
+  },
+  editText: {
+    position: 'absolute',
+    top: 90,
+    left: 325,
+    fontSize: 10,
+    color: '#FFFFFF',
+  },
+  imageSection: {
+    flex: 0.3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 20,
+  },
+  profileImage: {
+    width: 163,
+    height: 163,
+    position: 'absolute',
+    top: -75,
+    borderRadius: 100,
     zIndex: 100,
   },
-  text: {
-    width: 70,
-    height: 30,
-    top: 15,
-    left: 123,
-    fontFamily: 'Kanit',
-    fontSize: 20,
-    fontWeight: '500',
-    lineHeight: 30,
-    letterSpacing: 0,
-    textAlign: 'left',
-    position: 'absolute',
-    color: 'white',
-  },
-  txtName: {
-    width: 189,
-    height: 24,
-    top: 155,
-    left: 106,
-    fontFamily: 'Kanit',
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 24,
-    letterSpacing: 0,
-    textAlign: 'left',
-    position: 'absolute',
+  profileName: {
     color: '#F46413',
-  },
-  txtNo: {
-    width: 100,
-    height: 31,
-    top: 188,
-    left: 122,
+    top: 50,
     fontFamily: 'Kanit',
-    fontSize: 14,
-    fontWeight: '300',
-    lineHeight: 24,
-    letterSpacing: 0,
-    textAlign: 'left',
-    position: 'absolute',
-    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 20,
+    lineHeight: 29.9,
   },
-  txtMail: {
-    width: 130,
-    height: 31,
-    top: 233,
-    left: 122,
+  userDeatailSection: {
+    flex: 0.55,
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  detailsField: {
+    flex: 0.2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15,
+  },
+  detailsText: {
     fontFamily: 'Kanit',
-    fontSize: 14,
-    fontWeight: '500',
-    lineHeight: 24,
-    letterSpacing: 0,
-    textAlign: 'left',
-    position: 'absolute',
-    color: 'black',
+    fontWeight: '700',
+    fontSize: 16,
+    color: '#1E1E1E',
   },
-  txtAdd: {
-    width: 140,
-    height: 31,
-    top: 279,
-    left: 122,
+  changeButton: {
+    color: '#F46413',
     fontFamily: 'Kanit',
-    fontSize: 14,
-    fontWeight: '500',
-    lineHeight: 24,
-    letterSpacing: 0,
-    textAlign: 'left',
-    position: 'absolute',
-    color: 'black',
+    fontSize: 12,
   },
-  childView2: {
-    width: 300,
-    height: 100,
-    backgroundColor: '#F46413',
-  },
-  childView3: {
-    width: 300,
-    height: 36,
-    backgroundColor: '#F46413',
-    top: 341,
-    position: 'absolute',
-  },
-  transactionBtn: {
-    width: 80,
-    height: 30,
-    top: 520,
-    // left: 160,
-    marginHorizontal: 155,
-    borderRadius: 4,
-    backgroundColor: '#F46413',
-    display: 'flex',
+  modalContainer: {
+    flex: 1,
+    // width: 250,
+    // height: 195,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    top: 105,
   },
-  transactionBtnText: {
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 30,
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  modalTitle: {
+    textTransform: 'uppercase',
     fontFamily: 'Kanit',
-    fontWeight: '400',
-    fontSize: 11,
-    lineHeight: 16.45,
-    color: '#FFFFFF'
-  }
+    color: '#1E1E1E',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  modalInput: {
+    height: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: 'grey',
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
 });
 
 export default ProfileCard;
