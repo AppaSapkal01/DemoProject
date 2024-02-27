@@ -5,6 +5,7 @@ import ProfileCard from '../Components/ProfileCard';
 import Transaction from '../Components/Transaction';
 import ProfileDetails from '../Components/ProfileDetails';
 import NameSection from '../Components/NameSection';
+import EditProfile from '../Components/EditProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,8 @@ const StackNavigator: React.FC = () => (
     screenOptions={{
       headerShown: false,
     }}>
-    <Stack.Screen name="ProfileStack" component={ProfileDetails} />
+    <Stack.Screen name="Profile" component={ProfileDetails} />
+    <Stack.Screen name="EditProfile" component={EditProfile} options={{ title: 'Edit Profile' }}/>
     
   </Stack.Navigator>
 );
