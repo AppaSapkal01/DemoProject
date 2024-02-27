@@ -1,185 +1,216 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useMemo, useState} from 'react';
+import RadioGroup, {RadioButtonProps} from 'react-native-radio-buttons-group';
+import {red} from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 import CheckBox from 'react-native-check-box';
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
 
 const Login = () => {
-  const onPressLogin = () => {
-    // Do something about login operation
-  };
+  const radioButtons: RadioButtonProps[] = useMemo(
+    () => [
+      {
+        id: '1',
+        label: 'Hotel Owner',
+        value: 'member',
+      },
+      {
+        id: '2',
+        label: 'member',
+        value: 'member',
+      },
+    ],
+    [],
+  );
 
-  const onPressForgotPassword = () => {
-    // Do something about forgot password operation
-  };
-
-  const onPressSignUp = () => {
-    // Do something about signup operation
-  };
-
-  const [state, setState] = useState({
-    email: '',
-    password: '',
-  });
-
+  const [selectedId, setSelectedId] = useState<string | undefined>();
+  const [fullName, setFullName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isSelected, setSelection] = useState(false);
 
-  const onPressGoogleSignIn = async () => {
+  const handleLoginWithGoogle = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
+      // Configure GoogleSignIn
+      await GoogleSignin.configure({
+        // Add your Google Web Client ID here
+        webClientId: 'YOUR_GOOGLE_WEB_CLIENT_ID',
+      });
+
+      // Get user info from Google
       const userInfo = await GoogleSignin.signIn();
-      // Handle the signed-in user information
+
+      // Now you have the user's info, you can proceed with your app's authentication flow
+      console.log(userInfo);
     } catch (error) {
       console.error('Google Sign-In Error:', error);
     }
+  }; // <-- Add this closing curly brace
+
+  const handleLoginPress = () => {
+    // Navigate to login screen
+  };
+  const handleForgotPasswordPress = () => {
+    // Navigate to login screen
   };
 
   return (
-    <View style={styles.outcontainer}>
-      <View style={styles.container}>
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Log in to your account</Text>
-          <Text style={styles.paragraph}>Please enter your email and password to continue</Text>
-        </View>
-
-        {/* Existing Input Fields and Buttons */}
-        <Text style={styles.title}> Login Screen</Text>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => setState({ ...state, email: text })}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            secureTextEntry
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            onChangeText={text => setState({ ...state, password: text })}
-          />
-        </View>
-
-        {/* CheckBox Section */}
-        <View style={styles.checkboxContainer}>
-  <CheckBox
-    isChecked={isSelected}
-    onClick={() => setSelection(!isSelected)}
-    disabled={false}
-    checkBoxColor={'green'}
-  />
-  <View style={styles.checkboxTextContainer}>
-    <Text style={styles.label}>Remember me</Text>
-  </View>
-</View>
-
-
-        {/* Forgot Password Link */}
-        <TouchableOpacity onPress={onPressForgotPassword}>
-          <Text style={styles.forgotAndSignUpText}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        {/* New Buttons */}
-        <TouchableOpacity onPress={onPressLogin} style={styles.loginBtn}>
-          <Text style={styles.loginText}>LOGIN </Text>
-        </TouchableOpacity>
-
-        <Text>OR</Text>
-
-        {/* Google Sign-In Button */}
-        <GoogleSigninButton
-          style={{ width: 192, height: 48 }}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={onPressGoogleSignIn}
-        />
-        <TouchableOpacity onPress={onPressSignUp}>
-          <Text style={styles.forgotAndSignUpText}>Signup</Text>
-        </TouchableOpacity>
+    <View style={style.OuterView}>
+      <View style={style.View1}>
+        <Text style={style.RegiText}>Log in to account</Text>
+        <Text style={style.KindlyRegiText}>
+          Please enter your Email & Password to continue
+        </Text>
       </View>
 
-      {/* Footer */}
-      <View style={styles.footer}></View>
+      <Text style={style.RegitAs}>Login as</Text>
+      <RadioGroup
+        radioButtons={radioButtons}
+        onPress={setSelectedId}
+        selectedId={selectedId}
+        containerStyle={style.RadioGroupContainer}
+        labelStyle={style.RadioButtonText}
+      />
+      <View style={style.View3}>
+        <Text style={style.NameOfInput}>Email</Text>
+        <TextInput
+          style={style.input}
+          onChangeText={setEmail}
+          value={email}
+          placeholder="Email"
+          keyboardType="email-address"
+          placeholderTextColor="#A9A9A9"
+        />
+        <Text style={style.NameOfInput}>Password</Text>
+        <TextInput
+          style={style.input}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          secureTextEntry={true}
+          placeholderTextColor="#A9A9A9"
+        />
+      </View>
+      <View style={style.ButtonContainer}>
+        <View style={{flexDirection: 'row', left: -50}}>
+          <CheckBox
+            isChecked={isSelected}
+            onClick={() => setSelection(!isSelected)}
+            disabled={false}
+            checkBoxColor={'green'}
+          />
+          <View style={style.checkboxTextContainer}>
+            <Text style={style.label}>Remember Password</Text>
+          </View>
+        </View>
+        <TouchableOpacity onPress={handleForgotPasswordPress}>
+          <Text style={{color: '#F46413',left:-90,}}>
+            Forgot Password
+          </Text>
+        </TouchableOpacity>
+        <View style={{width: 300, height: 34, borderRadius: 3}}>
+          <Button title="Login" color="#F46413" />
+        </View>
+        <View><Text style={{ color: 'black', height: 18, fontFamily: 'Kanit', fontWeight: '300', fontSize: 12, lineHeight: 17.94 }}>OR</Text></View>
+        <TouchableOpacity onPress={handleLoginWithGoogle} style={style.googleButton}>
+          <Text style={style.googleButtonText}>Login with Google</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleLoginPress}>
+          <Text style={{color: 'black', top: 52}}>
+            Don't have an account? Create account
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  outcontainer: {
-    flex: 1,
-    backgroundColor: 'black',
-  },
+const style = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 16,
-    borderRadius: 8,
-    backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: 'black',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
-  headingContainer: {
-    width: '100%',
-    backgroundColor: 'orange',
-    paddingTop: 20, // Add paddingTop for spacing
-    paddingBottom: 20, // Add paddingBottom for spacing
-    alignItems: 'center', // Center horizontally
-    justifyContent: 'flex-start', // Align to the top vertically
-    
+  googleButton: {
+    width: 299,
+    height: 40,
+    backgroundColor: '#E7E7E7', // Google red color
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginTop: 20,
   },
-  heading: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: '#fff',
-    marginBottom: 10,
-  },
-  paragraph: {
+  googleButtonText: {
+    color: 'black',
     fontSize: 16,
-    color: '#fff',
   },
-  title: {
+  RegiText: {
+    width: 300,
+    height: 36,
+    fontFamily: 'Kanit',
+    left: 45,
     fontWeight: 'bold',
-    fontSize: 20,
-    color: '#fb5b5a',
-    marginBottom: 20,
+    fontSize: 24,
   },
-  inputView: {
-    width: '80%',
-    backgroundColor: '#fff', // Change background color
-    height: 50,
-    marginBottom: 20,
-    justifyContent: 'center',
-    padding: 20,
-    borderColor: 'black',
+  KindlyRegiText: {
+    width: 300,
+    height: 18,
+    fontFamily: 'Kanit',
+    left: 45,
+    fontWeight: 'bold',
+    fontSize: 12,
+    lineHeight: 17.94,
+  },
+  RegitAs: {
+    width: 90,
+    height: 24,
+    fontFamily: 'Kanit',
+    fontWeight: '500',
+    fontSize: 16,
+    color: 'black',
+    lineHeight: 23.92,
+    left: 29,
+  },
+  RadioGroupContainer: {
+    flexDirection: 'row',
+    left: 22,
+  },
+  RadioButtonText: {
+    height: 18,
+    fontFamily: 'Kanit',
+    fontSize: 12,
+    fontWeight: '400',
+    lineHeight: 18,
+    textAlign: 'left',
+    color: 'black',
+  },
+  NameOfInput: {
+    height: 21,
+    // width:36,
+    fontFamily: 'Kanit',
+    fontWeight: '400',
+    fontSize: 14,
+    lineHeight: 20.93,
+    color: 'black',
+    // marginVertical: 2,
+  },
+  input: {
+    width: 300,
+    height: 38,
+    marginVertical: 4,
     borderWidth: 1,
-  },
-  inputText: {
-    height: 50,
-    color: 'black',
-  },
-  forgotAndSignUpText: {
-    color: 'black',
-    fontSize: 11,
-  },
-  loginBtn: {
-    width: '80%',
-    backgroundColor: '#fb5b5a',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  loginText: {
-    color: 'white',
-  },
-  footer: {
-    width: '100%',
-    height: 95,
-    backgroundColor: 'red',
-    position: 'absolute',
-    bottom: 0,
+    borderColor: '#E1E1E1',
+    borderRadius: 3,
+    paddingHorizontal: 10,
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -192,6 +223,41 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     color: 'black',
+  },
+  OuterView: {
+    width: 359,
+    height: 617,
+    top: 113,
+    left: 16,
+    borderRadius: 8,
+    display: 'flex',
+    backgroundColor: 'white',
+  },
+  View1: {
+    width: 359,
+    height: 73,
+    backgroundColor: '#F46413',
+    top: -1,
+  },
+  View3: {
+    width: 300,
+    height: 130,
+
+    left: 29,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderBlockColor: '#E1E1E1',
+    borderLeftColor: '#E1E1E1',
+    borderRightColor: '#E1E1E1',
+  },
+  ButtonContainer: {
+    width: 300,
+    height: 239,
+    left: 29,
+    borderWidth: 1,
+    marginTop: 20,
+    alignItems: 'center',
+    // backgroundColor:'red',
   },
 });
 
