@@ -227,7 +227,7 @@ const style = StyleSheet.create({
   OuterView: {
     width: 359,
     height: 617,
-    top: 113,
+    top: 50,
     left: 16,
     borderRadius: 8,
     display: 'flex',
